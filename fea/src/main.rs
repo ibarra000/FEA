@@ -77,18 +77,31 @@ fn print_matrix_with_dashes(matrix: Vec<Vec<f64>>, units: &str) {
         max.max(width)
     });
 
-    // Print the matrix with dashes between elements
-    println!("\nTruss Matrix:\n");
+    // Create a dash line string with the desired length
+    let dash_line = format!(" {}", "-".repeat((max_width + units.len() + 6) * matrix[0].len() - 1));
+
+    // Print the truss matrix header with the dash line
+    println!("\nTruss Matrix:\n{}", dash_line);
+
+    // Iterate over each row in the matrix
     for row in matrix.iter() {
-        for val in row.iter() {
-            print!("{:>width$.1} ({}) ", val, units, width = max_width);
-        }
-        println!();
-        // Print a line of dashes below each row
-        println!("{}", "-".repeat((max_width + units.len() + 4) * row.len() - 1));
+        // Create a formatted string for the current row
+        let line = format!(
+            "| {} |",
+            row.iter()
+                .map(|val| format!("{:>width$.1} ({})", val, units, width = max_width))
+                .collect::<Vec<_>>()
+                .join(" | ")
+        );
+
+        // Print the formatted row and a dash line below it
+        println!("{}\n{}", line, dash_line);
     }
+
+    // Add an extra newline for better readability
     println!();
 }
+
 
 /// Main function to demonstrate truss_matrix and print_matrix_with_dashes.
 fn main() {
