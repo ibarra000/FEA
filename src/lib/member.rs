@@ -12,8 +12,7 @@ impl TrussMember {
         }
     }
 
-    pub fn expand(&mut self, total_nodes: usize) -> Matrix {
-        self.nodes.sort();
+    pub fn expand(&self, total_nodes: usize) -> Matrix {
         let mut expanded: Matrix = Matrix::zeros(total_nodes * 2, total_nodes * 2);
         let mut x = 0;
         let mut y = 0;
@@ -31,9 +30,6 @@ impl TrussMember {
                 }
             }
         }
-
-
-
         expanded
     }
 
