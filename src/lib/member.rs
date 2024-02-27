@@ -5,14 +5,21 @@ pub struct TrussMember {
 }
 
 impl TrussMember {
-    pub fn new(modulus: f64, area: f64, length: f64, angle: f64, nodes: Vec<usize>) -> TrussMember {
+    pub fn create_single(modulus: f64, area: f64, length: f64, angle: f64, nodes: Vec<usize>) -> TrussMember {
         TrussMember {
-            matrix: Matrix::stiffness(modulus, area, length, angle.to_radians()),
+            matrix: Matrix::stiffness_single(modulus, area, length, angle.to_radians()),
             nodes,
         }
     }
 
-    pub fn expand(&self, total_nodes: usize) -> Matrix {
+    pub fn create_double(modulus: f64, area: f64, length: f64, angle1: f64, angle2: f64, nodes: Vec<usize>) -> TrussMember {
+        TrussMember {
+            matrix: Matrix::stiffness_dbl(modulus, area, length, angle1.to_radians(), angle2.to_radians()),
+            nodes,
+        }
+    }
+
+    pub fn expand_to_global(&self, total_nodes: usize) -> Matrix {
         let mut expanded: Matrix = Matrix::zeros(total_nodes * 2, total_nodes * 2);
         let mut x = 0;
         let mut y = 0;
@@ -33,9 +40,8 @@ impl TrussMember {
         expanded
     }
 
-
-
     pub fn print(&self) {
         println!("{}\n", self.matrix.to_string())
     }
+    
 }

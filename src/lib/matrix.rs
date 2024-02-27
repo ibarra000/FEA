@@ -45,7 +45,17 @@ impl Matrix {
         }
     }
 
-    pub fn stiffness(modulus: f64, area: f64, length: f64, angle: f64) -> Matrix {
+    pub fn stiffness_dbl(modulus: f64, area: f64, length: f64, angle1: f64, angle2:f64) -> Matrix {
+        let spring_constant = modulus * area / length;
+        Matrix::from(vec![
+        vec![spring_constant * angle1.cos().powi(2), spring_constant * angle1.cos() * angle1.sin(), -spring_constant * angle1.cos() * angle2.cos(), -spring_constant * angle1.cos() * angle2.sin()],
+        vec![spring_constant * angle1.cos() * angle1.sin(), spring_constant * angle1.sin().powi(2), -spring_constant * angle2.cos() * angle1.sin(), -spring_constant * angle2.sin() * angle1.sin()],
+        vec![-spring_constant * angle1.cos() * angle2.cos(), -spring_constant * angle2.cos() * angle1.sin(), spring_constant * angle2.cos().powi(2), spring_constant * angle2.cos() * angle2.sin()],
+        vec![-spring_constant * angle1.cos() * angle2.sin(), -spring_constant * angle2.sin() * angle1.sin(), spring_constant * angle2.cos() * angle2.sin(), spring_constant * angle2.sin().powi(2)],
+        ])
+    }
+
+    pub fn stiffness_single(modulus: f64, area: f64, length: f64, angle: f64) -> Matrix {
         let spring_constant = modulus * area / length;
         Matrix::from(vec![
         vec![spring_constant * angle.cos().powi(2), spring_constant * angle.cos() * angle.sin(), -spring_constant * angle.cos().powi(2), -spring_constant * angle.cos() * angle.sin()],
@@ -149,7 +159,7 @@ impl Matrix {
 
     pub fn to_string(&self) -> String {
         let max_width = self.data.iter().flatten().fold(0, |max, val| {
-            let width = format!("{:.1}", val).len();
+            let width = format!("{:.3}", val).len();
             max.max(width)
         });
 
@@ -157,7 +167,7 @@ impl Matrix {
             format!(
                 "| {} |",
                 row.iter()
-                    .map(|val| format!("{:>width$.1} ", val, width = max_width))
+                    .map(|val| format!("{:>width$.3} ", val, width = max_width))
                     .collect::<Vec<_>>()
                     .join(" | ")
             )

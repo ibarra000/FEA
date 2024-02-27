@@ -15,7 +15,7 @@ impl TrussStructure {
         let mut gsm = Matrix::zeros(total_nodes * 2, total_nodes * 2);
 
         for member in &self.members {
-            let mut member_matrix = member.expand(total_nodes);
+            let mut member_matrix = member.expand_to_global(total_nodes);
             gsm = member_matrix.add(&gsm)
         }
 
